@@ -1,35 +1,43 @@
 import cv2
 import numpy as np
 
+def print_img(img):
+    cv2.imshow('img', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 class FaceDetector:
     def __init__(self):
-        print('Face detector created!')
+        self.__HaarCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        self.faces = np.empty(0)
+        self.img = np.empty(0)
 
-    def __face_boundaries(self, img, faces):
-        for rectangle in faces:
+    def print_with_boundaries(self):
+        assert self.faces.size, 'DetectorAssert: no faces @ print_face_boundaries'
+        assert self.img.size, 'DetectorAssert : no image @ print_face_boundaries'
+        img = self.img
+        for rectangle in self.faces:
             x, y, w, h = rectangle
-            img = cv2.rectangle(img, (x, y), (x+w,y+h), (255,0,0), 3)
-
-    def __greyscale(self, img):
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-    def HaarCascade(self):
-        HC = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-        img = cv2.imread('trump.jpeg')
-        self.__greyscale(img)
-
-        faces = HC.detectMultiScale(img, 1.03, 6)  # detect faces
-
-        print(faces)
-
-        self.__face_boundaries(img, faces)
-
+            img = cv2.rectangle(self.img, (x, y), (x+w,y+h), (255,0,0), 2)
         cv2.imshow('img', img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    def __greyscale(self):
+        assert self.img.size, 'DetectorAssert: no image @ __greyscale'
+        self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
+    def detect(self, img=None, scaleFactor=1.03, minNeghbors=6):
+        if img is not None:
+            self.img = img
 
-det = FaceDetector()
-det.HaarCascade()
+        assert self.img.size, 'DetectorAssert : no image @ detect'
+        detector = self.__HaarCascade
+        self.__greyscale()
+        self.faces = detector.detectMultiScale(self.img, scaleFactor, minNeghbors)
+
+img = cv2.imread('trump.jpeg')
+
+detector = FaceDetector()
+detector.detect(img)
+detector.print_with_boundaries()
