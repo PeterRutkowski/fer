@@ -18,7 +18,7 @@ class FaceDetector:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def __greyscale(self):
+    def __grayscale(self):
         assert self.img.size, 'DetectorAssert: no image @ __greyscale'
         self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
@@ -28,5 +28,5 @@ class FaceDetector:
 
         assert self.img.size, 'DetectorAssert : no image @ detect'
         detector = self.__HaarCascade
-        self.__greyscale()
+        self.__grayscale()
         self.faces = detector.detectMultiScale(self.img, scaleFactor, minNeghbors)
