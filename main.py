@@ -1,11 +1,13 @@
 from face_detector import FaceDetector
 from preprocessing import Preprocessor
+from feature_extraction import FeatureExtractor
 import cv2
 
 class FER:
     def __init__(self):
         self.face_detector = FaceDetector()
         self.preprocessor = Preprocessor()
+        self.extractor = FeatureExtractor()
 
     def __show_face(self, img):
         cv2.imshow('img', img)
@@ -18,9 +20,10 @@ class FER:
 
         for face in faces:
             self.__show_face(face)
-            #self.__show_face(self.preprocessor.BilateralFilterSmoothing(face))
-            self.__show_face(self.preprocessor.HistogramEqualisation(face))
+            self.__show_face(self.preprocessor.BilateralFilterSmoothing(face))
+            #self.__show_face(self.preprocessor.HistogramEqualisation(face))
 
-img = cv2.imread('trump.jpeg')
+
+img = cv2.imread('test.jpeg')
 model = FER()
 model.trial(img)

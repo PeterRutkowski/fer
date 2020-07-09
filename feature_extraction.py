@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
 
 class LocalBinaryPatterns:
     def __init__(self):
@@ -38,7 +39,7 @@ class LocalBinaryPatterns:
                 for k in range(len(binary_padding)):
                     bin += binary_padding[k] * powers[k]
                 template[i-1,j-1] = bin
-        template = np.int16(template)
+        template = np.uint8(template)
         return template
 
 class FeatureExtractor:
@@ -46,20 +47,14 @@ class FeatureExtractor:
         print()
         self.LBP = LocalBinaryPatterns()
 
+    def save_image(self, img):
+        img = Image.fromarray(img, 'L')
+        img.save('trial.png')
+
     def extract_features(self):
         print()
 
-img = cv2.imread('trump2.jpg')
-plt.imshow(img)
-plt.show()
-a = LocalBinaryPatterns()
-img = a.convert(img)
-
-plt.imshow(img, cmap='gray')
-plt.show()
-
-
-
-#cv2.imshow(img, cmap='gray')
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
+img = cv2.imread('test.jpeg')
+extractor = FeatureExtractor()
+img = extractor.LBP.convert(img)
+extractor.save_image(img)
