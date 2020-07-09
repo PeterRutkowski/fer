@@ -30,3 +30,10 @@ class FaceDetector:
         detector = self.__HaarCascade
         self.__grayscale()
         self.faces = detector.detectMultiScale(self.img, scaleFactor, minNeghbors)
+
+    def extract_faces(self):
+        cropped = []
+        for face in self.faces:
+            x, y, w, h = face
+            cropped.append(self.img[y:y+h, x:x+w])
+        return cropped
