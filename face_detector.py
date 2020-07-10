@@ -22,7 +22,7 @@ class FaceDetector:
         assert self.img.size, 'DetectorAssert: no image @ __greyscale'
         self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
 
-    def detect(self, img=None, scaleFactor=1.03, minNeghbors=6):
+    def detect(self, img=None, scaleFactor=1.03, minNeghbors=4):
         if img is not None:
             self.img = img
 
