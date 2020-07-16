@@ -1,11 +1,35 @@
 import cv2
 import numpy as np
+import dlib
+from imutils.face_utils import FaceAligner
+
+class DLIB:
+    def __init__(self):
+        self.detector = dlib.get_frontal_face_detector()
+        self.predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+        self.FaceAligner = FaceAligner(self.predictor, desiredFaceWidth=100)
+        self.faces = np.empty(0)
+    def detect(self, img):
+        faces = []
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        rects = self.detector(gray, 2)
+        for rect in rects:
+            faces.append(cv2.cvtColor(self.FaceAligner.align(img, gray, rect), cv2.COLOR_BGR2GRAY))
+        self.faces = np.float16(faces)
 
 class FaceDetector:
     def __init__(self):
         self.__HaarCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
         self.faces = np.empty(0)
         self.img = np.empty(0)
+
+    def face_boundaries(self):
+        faces = []
+        for rectangle in self.faces:
+            x, y, w, h = rectangle
+            cv2.rectangle(self.img, (x, y), (x+w,y+h), (255,0,0), 2)
+            faces.append(self.img[y:y+h,x:x+w])
+        return self.img, faces
 
     def print_with_boundaries(self):
         assert self.faces.size, 'DetectorAssert: no faces @ print_face_boundaries'
@@ -37,3 +61,4 @@ class FaceDetector:
             x, y, w, h = face
             cropped.append(self.img[y:y+h, x:x+w])
         return cropped
+

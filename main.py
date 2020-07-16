@@ -16,11 +16,11 @@ class FER:
 
     def trial(self, img):
         # detection
-        self.face_detector.detect(img, scaleFactor=1.1, minNeghbors=5)
+        #self.face_detector.detect(img, scaleFactor=1.03, minNeghbors=5)
         #self.face_detector.print_with_boundaries()
 
         # preprocessing images
-        self.__show_face(img)
+        #self.__show_face(img)
         #self.__show_face(self.preprocessor.GaussianSmoothing(img))
         #self.__show_face(self.preprocessor.BilateralFilterSmoothing(img))
         #self.__show_face(self.preprocessor.HistogramEqualisation(img))
@@ -35,8 +35,8 @@ class FER:
 
 
 
-#img = cv2.imread('trump.jpeg')
-img = cv2.imread('trump2.jpg')
+img = cv2.imread('trump.jpeg')
+#img = cv2.imread('trump2.jpg')
 #img = cv2.imread('test.jpeg')
 model = FER()
 model.trial(img)
