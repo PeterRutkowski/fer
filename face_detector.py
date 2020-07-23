@@ -13,8 +13,14 @@ class DLIB:
     def detect(self, img):
         # return a np.ndarray containing datected grayscaled faces
         faces = []
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # grayscale
+        if img.ndim == 2:
+            gray = img
+        else:
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # grayscale
         rects = self.detector(gray, 2) # calculate rectangles of detected faces
         for rect in rects:
-            faces.append(cv2.cvtColor(self.FaceAligner.align(img, gray, rect), cv2.COLOR_BGR2GRAY))
+            if img.ndim == 2:
+                faces.append(self.FaceAligner.align(img, gray, rect))
+            else:
+                faces.append(cv2.cvtColor(self.FaceAligner.align(img, gray, rect), cv2.COLOR_BGR2GRAY))
         self.faces = np.float16(faces)
