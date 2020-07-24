@@ -1,6 +1,6 @@
 import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import numpy as np
-import cv2
 from PIL import Image
 from face_detector import DLIB
 
@@ -22,21 +22,21 @@ class Tester:
         self.imagenames = np.empty(0)
 
     def process_images(self):
-        imagenames = np.sort(os.listdir('faces/'))[1:]  # on macOS ignore .DS_Store file
+        imagenames = np.sort(os.listdir('test/faces/'))[1:]  # on macOS ignore .DS_Store file
         x, y = [], []
         for imagename in imagenames:
-            img = np.uint8(Image.open('faces/{}'.format(imagename)))
+            img = np.uint8(Image.open('test/faces/{}'.format(imagename)))
             self.detector.detect(img)
             # print(imagename, len(self.detector.faces))
             x.append(self.detector.faces[0])
             y.append(self.OHE[imagename[0:2]])
 
         x, y, imagenames = np.asarray(x), np.asarray(y), np.asarray(imagenames)
-        np.savez_compressed('data/test.npz', x=x, y=y, imagenames=imagenames)
+        np.savez_compressed('test/test.npz', x=x, y=y, imagenames=imagenames)
         print(x.shape, y.shape)
 
     def test(self):
-        loaded = np.load('data/test.npz')
+        loaded = np.load('test/test.npz')
         x, self.y, self.imagenames = loaded['x'], loaded['y'], loaded['imagenames']
 
         x = np.expand_dims(x, axis=3)
@@ -64,3 +64,4 @@ t = Tester()
 #t.process_images()
 t.test()
 t.eval_accuracy()
+t.eval_scores()
